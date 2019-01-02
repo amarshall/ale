@@ -7,6 +7,15 @@ call ale#Set('python_pylint_use_global', get(g:, 'ale_use_global_executables', 0
 call ale#Set('python_pylint_change_directory', 1)
 call ale#Set('python_pylint_auto_pipenv', 0)
 
+" The directory to change to before running linter
+function! s:GetDir(buffer) abort
+    let l:project_root = ale#python#FindProjectRoot(a:buffer)
+
+    return !empty(l:project_root)
+    \   ? l:project_root
+    \   : expand('#' . a:buffer . ':p:h')
+endfunction
+
 function! ale_linters#python#pylint#GetExecutable(buffer) abort
     if (ale#Var(a:buffer, 'python_auto_pipenv') || ale#Var(a:buffer, 'python_pylint_auto_pipenv'))
     \ && ale#python#PipenvPresent(a:buffer)
@@ -18,7 +27,7 @@ endfunction
 
 function! ale_linters#python#pylint#GetCommand(buffer) abort
     let l:cd_string = ale#Var(a:buffer, 'python_pylint_change_directory')
-    \   ? ale#path#BufferCdString(a:buffer)
+    \   ? ale#path#Buffer(s:GetDir(a:buffer))
     \   : ''
 
     let l:executable = ale_linters#python#pylint#GetExecutable(a:buffer)

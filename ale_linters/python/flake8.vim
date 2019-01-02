@@ -11,6 +11,15 @@ function! s:UsingModule(buffer) abort
     return ale#Var(a:buffer, 'python_flake8_options') =~# ' *-m flake8'
 endfunction
 
+" The directory to change to before running linter
+function! s:GetDir(buffer) abort
+    let l:project_root = ale#python#FindProjectRoot(a:buffer)
+
+    return !empty(l:project_root)
+    \   ? l:project_root
+    \   : expand('#' . a:buffer . ':p:h')
+endfunction
+
 function! ale_linters#python#flake8#GetExecutable(buffer) abort
     if (ale#Var(a:buffer, 'python_auto_pipenv') || ale#Var(a:buffer, 'python_flake8_auto_pipenv'))
     \ && ale#python#PipenvPresent(a:buffer)
@@ -42,7 +51,7 @@ endfunction
 
 function! ale_linters#python#flake8#GetCommand(buffer, version_output) abort
     let l:cd_string = ale#Var(a:buffer, 'python_flake8_change_directory')
-    \   ? ale#path#BufferCdString(a:buffer)
+    \   ? ale#path#Buffer(s:GetDir(a:buffer))
     \   : ''
     let l:executable = ale_linters#python#flake8#GetExecutable(a:buffer)
     let l:version = ale#semver#GetVersion(l:executable, a:version_output)

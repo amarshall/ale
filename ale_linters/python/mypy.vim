@@ -16,7 +16,7 @@ function! ale_linters#python#mypy#GetExecutable(buffer) abort
     return ale#python#FindExecutable(a:buffer, 'python_mypy', ['mypy'])
 endfunction
 
-" The directory to change to before running mypy
+" The directory to change to before running linter
 function! s:GetDir(buffer) abort
     let l:project_root = ale#python#FindProjectRoot(a:buffer)
 
