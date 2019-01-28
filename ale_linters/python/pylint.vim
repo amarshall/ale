@@ -27,7 +27,7 @@ endfunction
 
 function! ale_linters#python#pylint#GetCommand(buffer) abort
     let l:cd_string = ale#Var(a:buffer, 'python_pylint_change_directory')
-    \   ? ale#path#Buffer(s:GetDir(a:buffer))
+    \   ? ale#path#CdString(s:GetDir(a:buffer))
     \   : ''
 
     let l:executable = ale_linters#python#pylint#GetExecutable(a:buffer)

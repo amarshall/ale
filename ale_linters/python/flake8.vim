@@ -51,7 +51,7 @@ endfunction
 
 function! ale_linters#python#flake8#GetCommand(buffer, version_output) abort
     let l:cd_string = ale#Var(a:buffer, 'python_flake8_change_directory')
-    \   ? ale#path#Buffer(s:GetDir(a:buffer))
+    \   ? ale#path#CdString(s:GetDir(a:buffer))
     \   : ''
     let l:executable = ale_linters#python#flake8#GetExecutable(a:buffer)
     let l:version = ale#semver#GetVersion(l:executable, a:version_output)
